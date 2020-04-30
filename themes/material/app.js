@@ -1,29 +1,21 @@
-// load in head necessary static
+// 在head 中 加载 必要静态
 document.write('<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/mdui@0.4.3/dist/css/mdui.min.css">');
-// markdown support
+// markdown支持
 document.write('<script src="//cdn.jsdelivr.net/npm/markdown-it@10.0.0/dist/markdown-it.min.js"></script>');
 document.write('<style>.mdui-appbar .mdui-toolbar{height:56px;font-size:1pc}.mdui-toolbar>*{padding:0 6px;margin:0 2px}.mdui-toolbar>i{opacity:.5}.mdui-toolbar>.mdui-typo-headline{padding:0 1pc 0 0}.mdui-toolbar>i{padding:0}.mdui-toolbar>a:hover,a.active,a.mdui-typo-headline{opacity:1}.mdui-container{max-width:980px}.mdui-list-item{transition:none}.mdui-list>.th{background-color:initial}.mdui-list-item>a{width:100%;line-height:3pc}.mdui-list-item{margin:2px 0;padding:0}.mdui-toolbar>a:last-child{opacity:1}@media screen and (max-width:980px){.mdui-list-item .mdui-text-right{display:none}.mdui-container{width:100%!important;margin:0}.mdui-toolbar>.mdui-typo-headline,.mdui-toolbar>a:last-child,.mdui-toolbar>i:first-child{display:block}}</style>');
-if(dark){document.write('<style>* {box-sizing: border-box}body{color:rgba(255,255,255,.87);background-color:#333232}.mdui-theme-primary-'+main_color+' .mdui-color-theme{background-color:#232427!important}</style>');}
-// Initialize the page and load the necessary resources
+
+// 初始化页面，并载入必要资源
 function init(){
     document.siteName = $('title').html();
-    $('body').addClass("mdui-theme-primary-"+main_color+" mdui-theme-accent-"+accent_color);
-    var html = "";
-    html += `
-    <header class="mdui-appbar mdui-color-theme">`
-    if(dark){
-        html += `
-        <div id="nav" class="mdui-toolbar mdui-container mdui-text-color-white-text">
-        </div>`;
-    }else{
-        html += `
-        <div id="nav" class="mdui-toolbar mdui-container">
-        </div>`;
-    }
-html += `
-    </header>
-        <div id="content" class="mdui-container"> 
-        </div>`;
+    $('body').addClass("mdui-theme-primary-blue-grey mdui-theme-accent-blue");
+    var html = `
+<header class="mdui-appbar mdui-color-theme"> 
+   <div id="nav" class="mdui-toolbar mdui-container"> 
+   </div> 
+</header>
+<div id="content" class="mdui-container"> 
+</div>
+	`;
     $('body').html(html);
 }
 
@@ -40,54 +32,51 @@ function render(path){
     }
 }
 
-// Title
+
+// 渲染 title
 function title(path){
     path = decodeURI(path);
     $('title').html(document.siteName+' - '+path);
 }
 
-// Nav
-function nav(path) {
-	var html = "";
-	html += `<a href="/" class="mdui-typo-headline folder">${document.siteName}</a>`;
-	var arr = path.trim('/').split('/');
-	var p = '/';
-	if (arr.length > 0) {
-		for (i in arr) {
-			var n = arr[i];
-			n = decodeURI(n);
-			p += n + '/';
-			if (n == '') {
-				break;
-			}
-			html += `<i class="mdui-icon material-icons mdui-icon-dark folder" style="margin:0;">chevron_right</i><a class="folder" href="${p}">${n}</a>`;
-		}
-	}
-	$('#nav').html(html);
+// 渲染导航栏
+function nav(path){
+    var html = "";
+    html += `<a href="/" class="mdui-typo-headline folder">${document.siteName}</a>`;
+    var arr = path.trim('/').split('/');
+    var p = '/';
+    if(arr.length > 0){
+        for(i in arr){
+            var n = arr[i];
+            n = decodeURI(n);
+            p += n+'/';
+            if(n == ''){
+                break;
+            }
+            html += `<i class="mdui-icon material-icons mdui-icon-dark folder" style="margin:0;">chevron_right</i><a class="folder" href="${p}">${n}</a>`;
+        }
+    }
+    $('#nav').html(html);
 }
 
-// List files
+// 渲染文件列表
 function list(path){
-    var content = "";
-	content += `
-	<div id="head_md" class="mdui-typo" style="display:none;padding: 20px 0;"></div>`;
-    if(search){
-        if(dark){content += `<div class="mdui-textfield"><input class="mdui-textfield-input mdui-text-color-white-text" id="searchInput" onkeyup="searchOnlyActiveDir()" type="text" placeholder="Type to search.."></input></div>`;
-        }else{content += `<div class="mdui-textfield"><input class="mdui-textfield-input" id="searchInput" onkeyup="searchOnlyActiveDir()" type="text" placeholder="Type to search.."></input></div>`;}
-    }
-	content += `<div class="mdui-row"> 
+	var content = `
+	<div id="head_md" class="mdui-typo" style="display:none;padding: 20px 0;"></div>
+
+	 <div class="mdui-row"> 
 	  <ul class="mdui-list"> 
 	   <li class="mdui-list-item th"> 
 	    <div class="mdui-col-xs-12 mdui-col-sm-7">
-	    File
+	     文件
 	<i class="mdui-icon material-icons icon-sort" data-sort="name" data-order="more">expand_more</i>
 	    </div> 
 	    <div class="mdui-col-sm-3 mdui-text-right">
-        Change the time
+	     修改时间
 	<i class="mdui-icon material-icons icon-sort" data-sort="date" data-order="downward">expand_more</i>
 	    </div> 
 	    <div class="mdui-col-sm-2 mdui-text-right">
-	     Size
+	     大小
 	<i class="mdui-icon material-icons icon-sort" data-sort="size" data-order="downward">expand_more</i>
 	    </div> 
 	    </li> 
@@ -100,12 +89,22 @@ function list(path){
 	 <div id="readme_md" class="mdui-typo" style="display:none; padding: 20px 0;"></div>
 	`;
 	$('#content').html(content);
+	
+    var password = localStorage.getItem('password'+path);
     $('#list').html(`<div class="mdui-progress"><div class="mdui-progress-indeterminate"></div></div>`);
     $('#readme_md').hide().html('');
     $('#head_md').hide().html('');
-    $.post(path, function(data,status){
+    $.post(path,'{"password":"'+password+'"}', function(data,status){
         var obj = jQuery.parseJSON(data);
-        if(typeof obj != 'null'){
+        if(typeof obj != 'null' && obj.hasOwnProperty('error') && obj.error.code == '401'){
+            var pass = prompt("目录加密, 请输入密码","");
+            localStorage.setItem('password'+path, pass);
+            if(pass != null && pass != ""){
+                list(path);
+            }else{
+                history.go(-1);
+            }
+        }else if(typeof obj != 'null'){
             list_files(path,obj.files);
         }
     });
@@ -120,7 +119,7 @@ function list_files(path,files){
             item['size'] = "";
         }
 
-        item['modifiedTime'] = utc2jakarta(item['modifiedTime']);
+        item['modifiedTime'] = utc2beijing(item['modifiedTime']);
         item['size'] = formatFileSize(item['size']);
         if(item['mimeType'] == 'application/vnd.google-apps.folder'){
             html +=`<li class="mdui-list-item mdui-ripple"><a href="${p}" class="folder">
@@ -146,7 +145,7 @@ function list_files(path,files){
                 });
             }
             var ext = p.split('.').pop();
-            if("|html|php|css|go|java|js|json|txt|sh|md|mp4|webm|avi|bmp|jpg|jpeg|png|gif|m4a|mp3|wav|ogg|mpg|mpeg|mkv|rm|rmvb|mov|wmv|asf|ts|flv|".indexOf(`|${ext}|`) >= 0){
+            if("|html|php|css|go|java|js|json|txt|sh|md|mp4|webm|avi|bmp|jpg|jpeg|png|gif|m4a|mp3|wav|ogg|mpg|mpeg|mkv|rm|rmvb|mov|wmv|asf|ts|flv|".indexOf(`|${ext.toLowerCase()}|`) >= 0){
 	            p += "?a=view";
 	            c += " view";
             }
@@ -180,7 +179,7 @@ function get_file(path, file, callback){
 
 
 
-// file display ?a=view
+// 文件展示 ?a=view
 function file(path){
 	var name = path.split('/').pop();
 	var ext = name.split('.').pop().toLowerCase().replace(`?a=view`,"");
@@ -205,7 +204,7 @@ function file(path){
 	}
 }
 
-// file display |html|php|css|go|java|js|json|txt|sh|md|
+// 文件展示 |html|php|css|go|java|js|json|txt|sh|md|
 function file_code(path){
 	var type = {
 		"html":"html",
@@ -227,7 +226,7 @@ function file_code(path){
 <pre id="editor" ></pre>
 </div>
 <div class="mdui-textfield">
-	<label class="mdui-textfield-label">Download link</label>
+	<label class="mdui-textfield-label">下载地址</label>
 	<input class="mdui-textfield-input" type="text" value="${href}"/>
 </div>
 <a href="${href}" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">file_download</i></a>
@@ -258,12 +257,12 @@ function file_code(path){
 	});
 }
 
-// file display video |mp4|webm|avi|
+// 文件展示 视频 |mp4|webm|avi|
 function file_video(path){
 	var url = window.location.origin + path;
-	var playBtn = `<a class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" href="potplayer://${url}"><i class="mdui-icon material-icons">&#xe038;</i>Play in potplayer</a>`;
-	if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
-	    playBtn = `	<a class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" href="intent:${url}#Intent;package=com.mxtech.videoplayer.ad;S.title=${path};end"><i class="mdui-icon material-icons">&#xe039;</i>Play in mxplayer</a>`;
+	var playBtn = `<a class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" href="potplayer://${url}"><i class="mdui-icon material-icons">&#xe038;</i>在 potplayer 中播放</a>`;
+	if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) { //移动端
+	    playBtn = `	<a class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" href="intent:${url}#Intent;package=com.mxtech.videoplayer.ad;S.title=${path};end"><i class="mdui-icon material-icons">&#xe039;</i>在mxplayer中播放</a>`;
 	}
 	var content = `
 <div class="mdui-container-fluid">
@@ -272,13 +271,13 @@ function file_video(path){
 	  <source src="${url}" type="video/mp4">
 	</video>
 	<br>${playBtn}
-	<!-Fixed label->
+	<!-- 固定标签 -->
 	<div class="mdui-textfield">
-	  <label class="mdui-textfield-label">download link</label>
+	  <label class="mdui-textfield-label">下载地址</label>
 	  <input class="mdui-textfield-input" type="text" value="${url}"/>
 	</div>
 	<div class="mdui-textfield">
-	  <label class="mdui-textfield-label">HTML reference</label>
+	  <label class="mdui-textfield-label">HTML 引用地址</label>
 	  <textarea class="mdui-textfield-input"><video><source src="${url}" type="video/mp4"></video></textarea>
 	</div>
 </div>
@@ -287,7 +286,7 @@ function file_video(path){
 	$('#content').html(content);
 }
 
-// file display music |mp3|m4a|wav|ogg|
+// 文件展示 音频 |mp3|m4a|wav|ogg|
 function file_audio(path){
 	var url = window.location.origin + path;
 	var content = `
@@ -297,13 +296,13 @@ function file_audio(path){
 	  <source src="${url}"">
 	</audio>
 	<br>
-	<!-Fixed label->
+	<!-- 固定标签 -->
 	<div class="mdui-textfield">
-	  <label class="mdui-textfield-label">Download link</label>
+	  <label class="mdui-textfield-label">下载地址</label>
 	  <input class="mdui-textfield-input" type="text" value="${url}"/>
 	</div>
 	<div class="mdui-textfield">
-	  <label class="mdui-textfield-label">HTML reference</label>
+	  <label class="mdui-textfield-label">HTML 引用地址</label>
 	  <textarea class="mdui-textfield-input"><audio><source src="${url}"></audio></textarea>
 	</div>
 </div>
@@ -313,7 +312,7 @@ function file_audio(path){
 }
 
 
-// picture display
+// 图片展示
 function file_image(path){
 	var url = window.location.origin + path;
 	var content = `
@@ -322,15 +321,15 @@ function file_image(path){
 	<img class="mdui-img-fluid" src="${url}"/>
 	<br>
 	<div class="mdui-textfield">
-	  <label class="mdui-textfield-label">Download link</label>
+	  <label class="mdui-textfield-label">下载地址</label>
 	  <input class="mdui-textfield-input" type="text" value="${url}"/>
 	</div>
 	<div class="mdui-textfield">
-	  <label class="mdui-textfield-label">HTML references</label>
+	  <label class="mdui-textfield-label">HTML 引用</label>
 	  <input class="mdui-textfield-input" type="text" value="<img src='${url}' />"/>
 	</div>
         <div class="mdui-textfield">
-	  <label class="mdui-textfield-label">Markdown Reference</label>
+	  <label class="mdui-textfield-label">Markdown 引用地址</label>
 	  <input class="mdui-textfield-input" type="text" value="![](${url})"/>
 	</div>
         <br>
@@ -340,43 +339,39 @@ function file_image(path){
 	$('#content').html(content);
 }
 
-function searchOnlyActiveDir() {
-	var e, t, n, l;
-	for (e = document.getElementById("searchInput").value.toUpperCase(), t = document.getElementById("list").getElementsByTagName("li"), l = 0; l < t.length; l++)((n = t[l].getElementsByTagName("a")[0]).textContent || n.innerText).toUpperCase().indexOf(e) > -1 ? t[l].style.display = "" : t[l].style.display = "none"
-}
 
-// time conversion
-function utc2jakarta(utc_datetime) {
-    // change to normal time format year-month-day hour: minutes: seconds
+//时间转换
+function utc2beijing(utc_datetime) {
+    // 转为正常的时间格式 年-月-日 时:分:秒
     var T_pos = utc_datetime.indexOf('T');
     var Z_pos = utc_datetime.indexOf('Z');
-    var year_month_day = utc_datetime.substr(0, T_pos);
-    var hour_minute_second = utc_datetime.substr(T_pos + 1, Z_pos - T_pos - 1);
-    var new_datetime = year_month_day + " " + hour_minute_second;
+    var year_month_day = utc_datetime.substr(0,T_pos);
+    var hour_minute_second = utc_datetime.substr(T_pos+1,Z_pos-T_pos-1);
+    var new_datetime = year_month_day+" "+hour_minute_second; // 2017-03-31 08:02:06
 
-    // processing becomes a timestamp
+    // 处理成为时间戳
     timestamp = new Date(Date.parse(new_datetime));
     timestamp = timestamp.getTime();
-    timestamp = timestamp / 1000;
+    timestamp = timestamp/1000;
 
-    // Add 7 hours, Jakarta time is eight more time zones than UTC time
-    var unixtimestamp = timestamp + 7 * 60 * 60;
+    // 增加8个小时，北京时间比utc时间多八个时区
+    var unixtimestamp = timestamp+8*60*60;
 
-    // timestamp into time
-    var unixtimestamp = new Date(unixtimestamp * 1000);
+    // 时间戳转为时间
+    var unixtimestamp = new Date(unixtimestamp*1000);
     var year = 1900 + unixtimestamp.getYear();
     var month = "0" + (unixtimestamp.getMonth() + 1);
     var date = "0" + unixtimestamp.getDate();
     var hour = "0" + unixtimestamp.getHours();
     var minute = "0" + unixtimestamp.getMinutes();
     var second = "0" + unixtimestamp.getSeconds();
-    return year + "-" + month.substring(month.length - 2, month.length) + "-" + date.substring(date.length - 2, date.length) +
-        " " + hour.substring(hour.length - 2, hour.length) + ":" +
-        minute.substring(minute.length - 2, minute.length) + ":" +
-        second.substring(second.length - 2, second.length);
+    return year + "-" + month.substring(month.length-2, month.length)  + "-" + date.substring(date.length-2, date.length)
+        + " " + hour.substring(hour.length-2, hour.length) + ":"
+        + minute.substring(minute.length-2, minute.length) + ":"
+        + second.substring(second.length-2, second.length);
 }
 
-// bytes conversion to KB, MB, GB
+// bytes自适应转换到KB,MB,GB
 function formatFileSize(bytes) {
     if (bytes>=1000000000) {bytes=(bytes/1000000000).toFixed(2)+' GB';}
     else if (bytes>=1000000)    {bytes=(bytes/1000000).toFixed(2)+' MB';}
@@ -394,7 +389,8 @@ String.prototype.trim = function (char) {
     return this.replace(/^\s+|\s+$/g, '');
 };
 
-// README.md HEAD.md support
+
+// README.md HEAD.md 支持
 function markdown(el, data){
     if(window.md == undefined){
         //$.getScript('https://cdn.jsdelivr.net/npm/markdown-it@10.0.0/dist/markdown-it.min.js',function(){
@@ -407,11 +403,12 @@ function markdown(el, data){
     }
 }
 
-// Listen for fallback events
+// 监听回退事件
 window.onpopstate = function(){
     var path = window.location.pathname;
     render(path);
 }
+
 
 $(function(){
     init();
